@@ -22,7 +22,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdint.h>
+#include <stdio.h>
+#include "led.h"
+#include "sensor.h"
+#include "scheduler.h"
+#include "uart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,16 +102,23 @@ int main(void)
   MX_TIM2_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Receive_IT(&huart2, &uartChar, 1);
+  HAL_ADC_Start(&hadc1);
+  HAL_TIM_Base_Start_IT(&htim2);
+  SCH_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  SCH_AddTask(ledBlink, 0, 1000);
+  SCH_AddTask(uartRead, 0, TIMER_TICK);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  SCH_Dispatch();
+
   }
   /* USER CODE END 3 */
 }
@@ -301,7 +313,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM2) {
+		SCH_Update();
+	}
+}
 /* USER CODE END 4 */
 
 /**
