@@ -6,6 +6,7 @@
  */
 
 #include "sensor.h"
+#include "scheduler.h"
 
 uint32_t sensorValue = 0;
 
