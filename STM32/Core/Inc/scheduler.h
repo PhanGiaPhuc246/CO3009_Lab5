@@ -13,9 +13,6 @@
 #include "main.h"
 
 #define SCH_TASKNUMBER 20
-#define TIMER_TICK 10
-extern UART_HandleTypeDef huart2;
-extern ADC_HandleTypeDef hadc1;
 
 typedef struct {
     void (*functionPointer)(void);
